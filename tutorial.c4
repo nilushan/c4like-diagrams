@@ -1,0 +1,100 @@
+specification {
+    element actor
+    element system
+    element component
+    element database
+    element table
+    element externalsystem
+
+    tag nextjs
+    tag microservices
+
+    relationship async
+    relationship uses
+}
+
+model {
+    actor customer 'Customer' {
+        description: 'Our dear customer'
+        style {
+            shape person
+        }
+    }
+
+    system saas 'Our SaaS' {
+
+        component ui 'Frontend' {
+            #nextjs
+            style {
+                icon tech:nextjs
+                shape browser
+            }
+            metadata {
+                version '1.1.0'
+            }
+        }
+
+        component backend 'Backend Services' {
+            #microservices
+            description 'Nextjs application, hosted on Vercel'
+            technology 'Nextjs, Nodejs'
+        }
+
+        component database 'PostgreSQL' {
+            description 'Backend database'
+            technology 'PostgreSQL'
+            style {
+                shape storage
+                icon tech:postgresql
+            }
+
+            table customers 'Customers table'
+            table orders 'Orders table'
+
+
+        }
+
+        ui -> backend 'fetches via HTTPS'
+        backend -> database 'data access'
+    }
+
+    component external 'External Systems' {
+
+        externalsystem stripe 'Payment System' {
+            description 'Stripe payment gateway'
+            link https://stripe.com
+            // icon tech:stripe
+        }
+
+        externalsystem sendgrid 'Email System' {
+            description 'Sendgrid email service'
+            link https://sendgrid.com
+        }
+
+    }
+
+    customer -> ui 'opens in browser'
+    customer -> saas 'enjoys our product'
+    saas.backend -> external.stripe 'process payment'
+    saas.backend .async external.sendgrid 'send email'
+
+
+
+}
+
+views {
+    view index {
+        include *
+    }
+
+
+    view of saas {
+        include *
+        include database.*
+        include external.*
+
+        style customer {
+            color muted
+        }
+    }
+}
