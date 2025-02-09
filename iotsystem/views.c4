@@ -1,0 +1,56 @@
+
+views {
+
+    view highlevel {
+        title 'Front ends'
+        include *
+        include users.*
+        include frontends.*
+        include iotsystem
+
+
+        style iotsystem.* {
+            color secondary
+        }
+        style iotsystem {
+            color secondary
+        }
+    }
+    
+    view backend of iotsystem {
+        title 'Back end'
+
+        include *
+        include iotsystem.*
+
+
+        style iotsystem.* {
+            color secondary
+        }
+        style iotsystem {
+            color secondary
+        }
+    }
+    view all of iotsystem.coreServices {
+        title 'All'
+        include *
+        include users.*
+        include frontends.*
+        include iotsystem.*
+        include iotsystem.customerServices.*
+        include iotsystem.customerServices.*
+        include iotsystem.adminServices.*
+        include iotsystem.coreServices.*
+        include iotsystem.datamodel.*
+        include iotsystem.entityStore.*
+        include iotsystem.eventHandlers.*
+        include iotsystem.eventQueues.*
+
+        style iotsystem.* {
+            color secondary
+        }
+        style iotsystem {
+            color secondary
+        }
+    }
+}

@@ -1,0 +1,171 @@
+model {
+
+
+    system iotsystem 'Iot System' {
+        description 'Iot System'
+
+        component apigateway 'API Gateway' {
+            description: 'API Gateway'
+        }
+
+        component publicservice 'Public Service' {
+
+
+            component customerServices 'Customer Services' {
+                description: 'Customer Services'
+                component customerRestApi 'Customer REST API ' {
+                    description: 'REST API Adapter'
+                }
+
+                component customerGRPCApi 'Customer GRPC API ' {
+                    description: 'GRPC API Adapter'
+                }
+
+                component customerCoreService 'Customer Core Service' {
+                    description: 'Core API Generic'
+                }
+            }
+
+            component adminServices 'Admin Services' {
+                description: 'Admin Services'
+
+                component adminRestApi 'Admin REST API ' {
+                    description: 'REST API Adapter'
+                }
+
+                component adminGRPCApi 'Admin GRPC API ' {
+                    description: 'GRPC API Adapter'
+                }
+
+                component adminCoreService 'Admin Core Service' {
+                    description: 'Core API Generic'
+                }
+            }
+
+        }
+        component coreServices 'Core Service' {
+            description: 'Core Services'
+
+            component grpcEndpoint 'GRPC Endpoint' {
+                description: 'GRPC Endpoint'
+            }
+
+            component userServices 'User Services' {
+                description: 'User Services'
+            }
+
+            component deviceServices 'Device Services' {
+                description: 'Device Services'
+            }
+
+            component deviceGroupServices 'DeviceGroup Services' {
+                description: 'DeviceGroup Service'
+            }
+
+            component UserDeviceGroupServices 'User DeviceGroup Services' {
+                description: 'UserDeviceGroup Service'
+            }
+
+            component datamodel 'Data Model' {
+                description: 'Data Model'
+                dataModel userModel 'User Model' {
+                    description: 'User Model'
+                }
+
+                dataModel deviceModel 'Device Model' {
+                    description: 'Device Model'
+                }
+
+                dataModel deviceGroupModel 'DeviceGroup Model' {
+                    description: 'DeviceGroup Model'
+                }
+
+                dataModel userDeviceGroupModel 'UserDeviceGroup Model' {
+                    description: 'UserDeviceGroup Model'
+                }
+
+            }
+            grpcEndpoint -> userServices
+            grpcEndpoint -> deviceServices
+            grpcEndpoint -> deviceGroupServices
+            grpcEndpoint -> UserDeviceGroupServices
+
+            userServices -> userModel
+            deviceServices -> deviceModel
+            deviceGroupServices -> deviceGroupModel
+            UserDeviceGroupServices -> userDeviceGroupModel
+
+
+        }
+
+        component eventHandlers 'Event Handlers' {
+            description: 'Event Handlers'
+
+            component auditLogEventHandler 'Audit Log Event Handler' {
+                description: 'Audit Log Event Handler'
+            }
+
+            component functionalEventHandler 'Functional Event Handler' {
+                description: 'Functional Event Handler'
+            }
+        }
+
+        datastore entityStore 'Data Store' {
+            description: 'Data Store'
+
+            datastore entityStore 'Entity Store' {
+                description: 'Entity Store'
+            }
+            datastore timeseriesStore 'Time Series Store' {
+                description: 'Time Series Store'
+            }
+
+            datastore redisCache 'Redis Cache' {
+                description: 'Redis Cache'
+            }
+        }
+
+        component eventQueues 'Event Queues' {
+            description: 'Event Queues'
+
+            eventQueue auditLogEventQueue 'Audit Log Event Queue' {
+                description: 'Audit Log Event Queue'
+            }
+
+            eventQueue functionalEventQueue 'Functional Event Queue' {
+                description: 'Functional Event Queue'
+            }
+        }
+
+    }
+
+    frontends.adminWebapp -> apigateway ' api request '
+    frontends.factoryMobileapp -> apigateway ' api request'
+    frontends.customerWebapp -> apigateway ' api request'
+    frontends.customerMobileapp -> apigateway ' api request'
+
+    apigateway -> customerRestApi 'customer verified'
+    apigateway -> customerGRPCApi 'customer verified'
+    customerRestApi -> customerCoreService
+    customerGRPCApi -> customerCoreService
+
+    apigateway -> adminRestApi 'admin verified'
+    apigateway -> adminGRPCApi 'admin verified'
+    adminRestApi -> adminCoreService
+    adminGRPCApi -> adminCoreService
+    adminCoreService -> coreServices
+    customerCoreService -> coreServices
+
+    coreServices.datamodel -> entityStore
+    publicservice -> coreServices
+
+
+    coreServices -> eventQueues
+    eventQueues.auditLogEventQueue -> auditLogEventHandler
+    eventQueues.functionalEventQueue -> functionalEventHandler
+    functionalEventHandler -> coreServices
+    functionalEventHandler -> timeseriesStore
+    auditLogEventHandler -> timeseriesStore
+
+}
+

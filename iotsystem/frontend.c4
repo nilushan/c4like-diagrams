@@ -1,0 +1,34 @@
+model {
+    component users {
+        user adminUser 'Admin User' {
+            description: 'Admin user of the system'
+        }
+        user factoryUser 'Factory User' {
+            description: 'Factory user of the system'
+        }
+        user customerUser 'Customer User' {
+            description: 'Customer user of the system'
+        }
+
+    }
+
+    component frontends {
+
+        webapp adminWebapp 'Admin Web App' {
+        }
+        webapp customerWebapp 'Customer Web App' {
+        }
+        mobileapp customerMobileapp 'Customer Mobile App' {
+        }
+        mobileapp factoryMobileapp 'Factory Mobile App' {
+        }
+    }
+
+
+    adminUser -> adminWebapp 'uses'
+    factoryUser -> factoryMobileapp 'uses'
+    customerUser -> customerWebapp 'uses'
+    customerUser -> customerMobileapp 'uses'
+
+}
+

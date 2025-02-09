@@ -1,0 +1,43 @@
+model {
+
+    component csrmesh 'CRS Mesh' {
+        description: 'CRS Mesh'
+        style {
+            color gray
+        }
+
+        iothub gateway 'Gateway' {
+            description: 'Gateway device'
+        }
+
+        bledevice DeviceA 'Device A' {
+            description: 'BLE device'
+        }
+
+
+        bledevice DeviceB 'Device B' {
+            description: 'BLE device'
+        }
+
+        bledevice DeviceC 'Device C' {
+            description: 'BLE device'
+        }
+    }
+
+    DeviceA .blemesh DeviceB
+    DeviceB .blemesh DeviceC
+    DeviceC .blemesh DeviceA
+    DeviceA .blemesh gateway 'receive via BLE'
+    gateway .blemesh DeviceA 'send via BLE'
+
+}
+
+views {
+    view devices {
+        title: 'Devices'
+        include csrmesh         
+        include csrmesh.*
+    }
+
+
+}

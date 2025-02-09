@@ -1,0 +1,18 @@
+specification {
+
+    element iothub {
+        style {
+            shape mobile
+        }
+    }
+    element bledevice {
+        style {
+            shape mobile
+            color green
+        }
+    }
+
+    relationship blemesh { 
+    }
+
+}
